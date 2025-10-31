@@ -1,0 +1,231 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Множитель</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+  <input type="number" id="a">
+  <input type="number" id="b">
+  <button onclick="calculate()">Умножить</button>
+  <p id="result"></p>
+
+  <script type="text/javascript"></script>
+  <script type="text/javascript" src="/eel.js"></script>
+  <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор теплоизолированной трубы</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+        }
+        .header-title {
+            color: #0d6efd;
+            margin-bottom: 30px;
+        }
+        .add-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #0d6efd;
+            padding-right: 15px;
+            vertical-align: middle;
+        }
+        .add-btn:hover {
+            color: #0b5ed7;
+        }
+        .table-row-with-btn {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="header-title text-center">Выбор параметров теплоизолированной трубы</h2>
+        
+        <img src="./img/pipe.jfif" class="img-fluid" alt="Не удалось загрузить изображение">
+
+        <div class="table-responsive">
+            <h4 class="mb-3">Номенклатура продукции: Труба теплоизолированная</h4>
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th style="width: 40px;"></th>
+                        <th>d, мм</th>
+                        <th colspan="2">ПЭ оболочка</th>
+                        <th colspan="2">ОЦ оболочка</th>
+                        <th>ГОСТ 30732-2006</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Тип 1</th>
+                        <th>Тип 2</th>
+                        <th>Тип 1</th>
+                        <th>Тип 2</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr class="table-row-with-btn">
+                        <td><span class="add-btn" data-bs-toggle="modal" data-bs-target="#paramsModal">+</span></td>
+                        <td>32</td>
+                        <td>125</td>
+                        <td>0</td>
+                        <td>125</td>
+                        <td>0</td>
+                        <td>125</td>
+                    </tr>
+                    <tr class="table-row-with-btn">
+                        <td><span class="add-btn" data-bs-toggle="modal" data-bs-target="#paramsModal">+</span></td>
+                        <td>38</td>
+                        <td>125</td>
+                        <td>0</td>
+                        <td>125</td>
+                        <td>0</td>
+                        <td>125</td>
+                    </tr>
+                    <!-- Остальные строки таблицы по аналогии -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div class="modal fade" id="paramsModal" tabindex="-1" aria-labelledby="paramsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paramsModalLabel">Выбор параметров трубы</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="product-card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Наименование продукции:</h4>
+                                <p class="lead">Труба теплоизолированная Cr-<span id="selectedDiameter">32</span>×2.8(ДУ-25)-1-ППУ-ПЭ</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 form-section">
+                                <label for="gost-select" class="form-label">ГОСТ:</label>
+                                <select class="form-select" id="gost-select">
+                                    <option selected>30732-2020</option>
+                                    <option>30732-2006</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 form-section">
+                                <label for="diameter-select" class="form-label">Диаметр, мм:</label>
+                                <select class="form-select" id="diameter-select" disabled>
+                                    <option selected>32</option>
+                                    <option>38</option>
+                                    <option>45</option>
+                                    <option>57</option>
+                                    <option>76</option>
+                                    <option>89</option>
+                                    <option>108</option>
+                                    <option>114</option>
+                                    <option>133</option>
+                                    <option>159</option>
+                                    <option>219</option>
+                                    <option>273</option>
+                                    <option>325</option>
+                                    <option>377</option>
+                                    <option>426</option>
+                                    <option>530</option>
+                                    <option>630</option>
+                                    <option>720</option>
+                                    <option>820</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 form-section">
+                                <label for="thickness-select" class="form-label">Толщина трубы, мм:</label>
+                                <select class="form-select" id="thickness-select">
+                                    <option selected>2.5</option>
+                                    <option>2.8</option>
+                                    <option>3.0</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 form-section">
+                                <label for="shell-select" class="form-label">Оболочка:</label>
+                                <select class="form-select" id="shell-select">
+                                    <option selected>ПЭ</option>
+                                    <option>ОЦ</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 form-section">
+                                <label for="type-select" class="form-label">Тип:</label>
+                                <select class="form-select" id="type-select">
+                                    <option selected>1</option>
+                                    <option>2</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 form-section">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="insulation-service">
+                                    <label class="form-check-label" for="insulation-service">
+                                        Услуга изоляции
+                                    </label>
+                                </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="seamless-pipe">
+                                    <label class="form-check-label" for="seamless-pipe">
+                                        Бесшовная труба
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 form-section">
+                                <label for="quantity" class="form-label">Количество, м:</label>
+                                <input type="number" class="form-control" id="quantity" value="1" min="1">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 form-section">
+                                <label for="notes" class="form-label">Примечание:</label>
+                                <textarea class="form-control" id="notes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button class="btn btn-primary" onclick="calculate()">Добавить в заказ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="./js/modal.js"></script>
+    <script src="./js/table.js"></script>
+</body>
+</html>

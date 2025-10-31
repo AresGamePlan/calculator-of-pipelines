@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ППУ Калькулятор</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --highlight: #fef3c7;
+            --gost-bg: #dbeafe;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .card {
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        
+        .result-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .result-item:hover {
+            background-color: rgba(243, 244, 246, 0.5);
+        }
+        
+        .result-item-highlight {
+            background-color: var(--highlight);
+            font-weight: 600;
+        }
+        
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .result-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 500;
+            text-align: right;
+        }
+        
+        .result-value-highlight {
+            color: #d97706;
+            font-weight: 700;
+        }
+        
+        .gost-select {
+            background-color: var(--gost-bg);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            padding: 8px 24px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .scrollable-container {
+            height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .icon {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="h1">
+            Результаты расчетов
+        </h1>
+    </div>
+    <div class="container">
+        <a href="./index.html" class="btn-primary text-white">назад</a>
+    </div>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="section-title"><i class="bi bi-graph-up"></i> Материалы и параметры</h2>
+                        <div class="scrollable-container" id="materialsContainer">
+                            <!-- Результаты будут здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="section-title"><i class="bi bi-cash-stack"></i> Экономические показатели</h2>
+                        <div class="scrollable-container" id="economicsContainer">
+                            <!-- Результаты будут здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script>
+
+        async function calculateAll() {
+
+            let out = await eel.get_data()();
+            out.forEach(item => {
+                console.log(item)
+            });
+            
+            return {
+                _weight_of_steel_wire: out[0],
+                _length_of_steel_pipe: out[1],
+                _length_of_PE_sheath: out[2],
+                _foam_components: out[3],
+                _filling: out[4],
+                _component_A: out[5],
+                _component_B: out[6],
+                _quantity_of_steel_pipe: out[7],
+                _quantity_of_PE: out[8],
+                _copper_wire: out[9],
+                _consumption_of_centralizers_segments: out[10],
+                _salary_gross_brutto_centerers: out[11],
+                _salary_gross_brutto_filler: out[12],
+                _cost_of_work_for_one_pipe: out[13],
+                _payroll_taxes_at_the_expense_of_the_employer: out[14],
+                _overheads: out[15],
+                _cost_price_of_one_piece_of_product_without_VAT: out[16],
+                _cost_price_of_one_mp_of_pipe_no_VAT: out[17],
+                _cost_price_of_one_mp_of_pipe_with_VAT: out[18],
+                _order_cost_with_VAT: out[19]
+            };
+        }
+
+        // Обновление интерфейса
+        async function updateResults() { 
+            const results = await calculateAll();
+            
+            console.log(results)
+            
+            // Очистка контейнеров
+            document.getElementById('materialsContainer').innerHTML = '';
+            document.getElementById('economicsContainer').innerHTML = '';
+            
+            // Материалы
+            const materialData = [
+                {key: '_weight_of_steel_wire', name: 'Вес стальной трубы (1мп)', icon: 'bi-speedometer2', unit: 'кг'},
+                {key: '_length_of_steel_pipe', name: 'Длина стальной трубы', icon: 'bi-rulers', unit: 'м'},
+                {key: '_length_of_PE_sheath', name: 'Длина ПЭ-оболочки', icon: 'bi-aspect-ratio', unit: 'мм'},
+                {key: '_foam_components', name: 'Пенокомпоненты (всего)', icon: 'bi-droplet', unit: 'кг'},
+                {key: '_filling', name: 'Время заливки', icon: 'bi-clock', unit: 'сек'},
+                {key: '_component_A', name: 'Компонент А (Полиол)', icon: 'bi-1-circle', unit: 'кг'},
+                {key: '_component_B', name: 'Компонент В (Изоционат)', icon: 'bi-2-circle', unit: 'кг'},
+                {key: '_quantity_of_steel_pipe', name: 'Количество стальной трубы', icon: 'bi-building', unit: 'кг'},
+                {key: '_quantity_of_PE', name: 'Количество ПЭ оболочки', icon: 'bi-box-seam', unit: 'мп'},
+                {key: '_copper_wire', name: 'Провод медный', icon: 'bi-lightning', unit: 'кг'},
+                {key: '_consumption_of_centralizers_segments', name: 'Расход центраторов', icon: 'bi-tools', unit: 'шт'}
+            ];
+            
+            materialData.forEach(item => {
+                if (results[item.key]) {
+                    const value = `${results[item.key]} ${item.unit}`;
+                    createResultItem('materialsContainer', item.name, value, item.icon);
+                }
+            });
+            
+            // Экономика
+            const economicData = [
+                {key: '_salary_gross_brutto_centerers', name: 'ЗП Центровщики (брутто)', icon: 'bi-person', highlight: false},
+                {key: '_salary_gross_brutto_filler', name: 'ЗП Заливщик (брутто)', icon: 'bi-person-workspace', highlight: false},
+                {key: '_cost_of_work_for_one_pipe', name: 'Стоимость работы на 1 трубу', icon: 'bi-hammer', highlight: false},
+                {key: '_payroll_taxes_at_the_expense_of_the_employer', name: 'Налоги с ФОТ', icon: 'bi-file-text', highlight: false},
+                {key: '_overheads', name: 'Накладные расходы', icon: 'bi-graph-up', highlight: false},
+                {key: '_cost_price_of_one_piece_of_product_without_VAT', name: 'Себестоимость 1 шт без НДС', icon: 'bi-briefcase', highlight: false},
+                {key: '_cost_price_of_one_mp_of_pipe_no_VAT', name: 'Себестоимость 1 мп без НДС', icon: 'bi-currency-exchange', highlight: false},
+                {key: '_cost_price_of_one_mp_of_pipe_with_VAT', name: 'Себестоимость 1 мп с НДС', icon: 'bi-cash', highlight: false},
+                {key: '_order_cost_with_VAT', name: 'Стоимость заказа с НДС', icon: 'bi-award', highlight: true}
+            ];
+            
+            economicData.forEach(item => {
+                if (results[item.key]) {
+                    createResultItem('economicsContainer', item.name, results[item.key], item.icon, item.highlight);
+                }
+            });
+        }
+        
+        function createResultItem(containerId, label, value, icon, highlight = false) {
+            const container = document.getElementById(containerId);
+            const item = document.createElement('div');
+            item.className = `result-item d-flex justify-content-between align-items-center ${highlight ? 'result-item-highlight' : ''}`;
+            
+            item.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi ${icon} icon"></i>
+                    <span class="result-label">${label}</span>
+                </div>
+                <span class="result-value ${highlight ? 'result-value-highlight' : ''}">${value}</span>
+            `;
+            
+            container.appendChild(item);
+        }
+        
+        // Инициализация
+        updateResults();
+    </script>
+</body>
+</html>
